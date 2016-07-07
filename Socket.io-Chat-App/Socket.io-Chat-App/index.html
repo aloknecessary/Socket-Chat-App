@@ -1,0 +1,81 @@
+﻿<!doctype html>
+<html>
+    <head>
+        <title>Socket.IO chat</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font: 13px Helvetica, Arial; }
+            form { background: rgb(218, 179, 70); padding: 3px; position: fixed; bottom: 10px; width: 98.5%; }
+            form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+            form button {
+                width: 9%; 
+                background: rgb(62, 190, 232); 
+                border: none; 
+                padding: 10px;
+                color: white;
+            }
+            #messages {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                margin-top: 20px;
+                background: #3399ff;
+                padding: 20px;
+                min-height: 300px;
+                margin: 10px;
+            }
+                #messages li {
+                    padding: 5px 10px;
+                    background: #cce5ff;
+                    margin: 5px;
+                }
+            #messages li:nth-child(odd) { background: #f1eaea; }
+            #username {
+                padding: 5px;
+                border-radius: 5px;
+                box-shadow: 5px 0px 21px #24efe6;
+                box-shadow: 5px 0px 21px rgba(36, 239, 230, 0.58);
+            }
+           h4,form {
+               margin: 10px;
+           }
+        </style>
+        <script src="/scripts/socket.io-1.4.5.js"></script>
+        <script src="/scripts/jquery-2.2.3.js"></script>
+    </head>
+    <body>
+        <br/><h4>Update your username to start chatting <input type="text" placeholder="type in your username" id="username"/></h4>
+        <ul id="messages"></ul>
+        <form action="">
+            <input id="msg" autocomplete="off" /><button>Send</button>
+        </form>
+        <script type="text/javascript">
+            var socket = io();
+            $('#username').focus();
+            $('form').submit(function () {
+                if ($('#username').val() === '') {
+                    alert('Username is required to chat..');
+                    $('#username').focus();
+                    return false;
+                }
+                var req = {
+                    username: $('#username').val(),
+                    msg: $('#msg').val()
+                };
+                socket.emit('chat message', req);
+                $('#msg').val('');
+                //
+                //Needed if you user broadcast at server end to append self messages
+                //$('#messages').append($('<li class="keep-left">').html('<b>' + req.username + ': </b>' + req.msg));
+                return false;
+            });
+            socket.on('chat message', function (msg) {
+                $('#messages').append($('<li class="keep-right">').html('<b>' + msg.username + ': </b>' + msg.msg));
+            });
+            //
+            socket.on('broadcast', function(msg) {
+                $('#messages').append($('<li>').text(msg));
+            });
+        </script>
+    </body>
+</html>

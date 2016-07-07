@@ -1,0 +1,14 @@
+{
+  "name": "Socket.io-Chat-App",
+  "version": "0.0.1",
+  "description": "Socket.io-Chat-App",
+  "main": "server.js",
+  "author": {
+    "name": "Alok",
+    "email": "aloks@byteridge.com"
+  },
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.4.5"
+  }
+}
