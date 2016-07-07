@@ -1,54 +1,29 @@
 ﻿<!doctype html>
 <html>
     <head>
-        <title>Socket.IO chat</title>
-        <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font: 13px Helvetica, Arial; }
-            form { background: rgb(218, 179, 70); padding: 3px; position: fixed; bottom: 10px; width: 98.5%; }
-            form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-            form button {
-                width: 9%; 
-                background: rgb(62, 190, 232); 
-                border: none; 
-                padding: 10px;
-                color: white;
-            }
-            #messages {
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-                margin-top: 20px;
-                background: #3399ff;
-                padding: 20px;
-                min-height: 300px;
-                margin: 10px;
-            }
-                #messages li {
-                    padding: 5px 10px;
-                    background: #cce5ff;
-                    margin: 5px;
-                }
-            #messages li:nth-child(odd) { background: #f1eaea; }
-            #username {
-                padding: 5px;
-                border-radius: 5px;
-                box-shadow: 5px 0px 21px #24efe6;
-                box-shadow: 5px 0px 21px rgba(36, 239, 230, 0.58);
-            }
-           h4,form {
-               margin: 10px;
-           }
-        </style>
-        <script src="/scripts/socket.io-1.4.5.js"></script>
-        <script src="/scripts/jquery-2.2.3.js"></script>
+        <title>Socket.IO sample chat</title>
+        <script src="scripts/socket.io-1.4.5.js"></script>
+        <script src="scripts/jquery-2.2.3.js"></script>
+        <link rel="stylesheet" href="css/main.css"/>
     </head>
     <body>
-        <br/><h4>Update your username to start chatting <input type="text" placeholder="type in your username" id="username"/></h4>
-        <ul id="messages"></ul>
+        <br/>
+        <h4>Set your username to start chatting 
+            <input type="text" placeholder="type in your username" id="username"/>
+        </h4>
+
+        <ul id="messages">
+            
+        </ul>
         <form action="">
-            <input id="msg" autocomplete="off" /><button>Send</button>
+            <input id="msg" autocomplete="off" placeholder="type in your message and press enter to send"/>
+            <button>Send</button>
         </form>
+        
+        <label id="userTyping"></label>
+        
+        <!--User's  Scripts -->
+
         <script type="text/javascript">
             var socket = io();
             $('#username').focus();
@@ -69,13 +44,25 @@
                 //$('#messages').append($('<li class="keep-left">').html('<b>' + req.username + ': </b>' + req.msg));
                 return false;
             });
+            //
+            $('#msg').on('keypress', function () {
+                if ($(this).val().length % 3 == 0) {
+                    socket.emit('typing', $('#username').val());
+                }
+            });
+            //
             socket.on('chat message', function (msg) {
-                $('#messages').append($('<li class="keep-right">').html('<b>' + msg.username + ': </b>' + msg.msg));
+                $('#messages').append($('<li class="' + (msg.username === $('#username').val() ? 'my-msg' : 'fnds-msg') + '">').html('<b>' + msg.username + ': </b>' + msg.msg + '<span></span>'));
+            });
+            //
+            socket.on('typing', function (msg) {
+                $('#userTyping').html(msg + " is typing...").fadeIn().fadeOut();
             });
             //
             socket.on('broadcast', function(msg) {
                 $('#messages').append($('<li>').text(msg));
             });
         </script>
+        
     </body>
 </html>

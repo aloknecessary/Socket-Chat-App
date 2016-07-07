@@ -2,8 +2,10 @@
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var path = require('path');
 //
 app.use('/scripts', express.static(__dirname + "/scripts"));
+app.use('/css', express.static(path.join(__dirname, 'css')));
 //
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -24,6 +26,10 @@ io.on('connection', function (socket) {
     //
     socket.on('broadcast', function (msg) {
         io.emit('chat message', msg);
+    });
+    //
+    socket.on('typing', function(msg) {
+        socket.broadcast.emit('typing', msg);
     });
     //
     socket.on('disconnect', function () {

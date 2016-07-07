@@ -1,0 +1,2 @@
+D:\Alok\My Practice Projects\GIT\Chat-App\Socket.io-Chat-App\Socket.io-Chat-App\obj\Debug\Socket.io-Chat-App.njsprojResolveAssemblyReference.cache
+D:\Alok\My Practice Projects\GIT\Chat-App\Socket.io-Chat-App\Socket.io-Chat-App\bin\Microsoft.NodejsTools.WebRole.dll
