@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="scripts\jquery-2.2.3.js" />
     <Compile Include="server.js" />
+    <Content Include="css\bootstrap.css" />
     <Content Include="index.html" />
     <Content Include="package.json" />
     <Content Include="README.md" />

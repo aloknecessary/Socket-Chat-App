@@ -1,32 +1,72 @@
 ﻿<!doctype html>
 <html>
-    <head>
-        <title>Socket.IO sample chat</title>
-        <script src="scripts/socket.io-1.4.5.js"></script>
-        <script src="scripts/jquery-2.2.3.js"></script>
-        <link rel="stylesheet" href="css/main.css"/>
-    </head>
-    <body>
-        <br/>
-        <h4>Set your username to start chatting 
-            <input type="text" placeholder="type in your username" id="username"/>
-        </h4>
+<head>
+    <title>Socket.IO sample chat</title>
+    <script src="scripts/socket.io-1.4.5.js"></script>
+    <script src="scripts/jquery-2.2.3.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+    <div class="row start-chat">
+        <div class="col-xs-4 col-xs-offset-4 user-register">
+            <div class="row">
+                <h3>Set your username and start chatting:</h3>
+            </div>
+            <div class="row">
+                <input class="form-control" type="text" placeholder="type in your username" id="username" />
+            </div>
+            <div class="row pull-right">
+                <button class="btn btn-info" id="userRegister">Register</button>
+            </div>
+        </div>
+    </div>
+    <div class="row hidden chatting">
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+                <h5 id="title" class="text-right"></h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-offset-1 col-xs-10">
+                <ul id="messages"></ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+                <label id="userTyping"></label>
+            </div>
+        </div>
+        <div class="row">
+            <form>
+                <div class="col-xs-offset-1 col-xs-9">
+                    <input class="form-control" id="msg" autocomplete="off" placeholder="type in your message and press enter to send" />
+                </div>
+                <div class="col-xs-2">
+                    <button class="btn btn-info">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--User's  Scripts -->
 
-        <ul id="messages">
-            
-        </ul>
-        <form action="">
-            <input id="msg" autocomplete="off" placeholder="type in your message and press enter to send"/>
-            <button>Send</button>
-        </form>
-        
-        <label id="userTyping"></label>
-        
-        <!--User's  Scripts -->
-
-        <script type="text/javascript">
+    <script type="text/javascript">
+        $(document).ready(function () {
             var socket = io();
             $('#username').focus();
+            //
+            $('#userRegister').off('click').on('click', function () {
+                socket.emit('adduser', $('#username').val());
+            });
+            //
+            // listener, whenever the server emits 'updatechat', this updates the chat body
+            socket.on('updatechat', function (data) {
+                $('#title').append(data);
+                console.log(data);
+                $('.chatting').removeClass('hidden');
+                $('.start-chat').addClass('hidden');
+            });
+            //
             $('form').submit(function () {
                 if ($('#username').val() === '') {
                     alert('Username is required to chat..');
@@ -59,10 +99,11 @@
                 $('#userTyping').html(msg + " is typing...").fadeIn().fadeOut();
             });
             //
-            socket.on('broadcast', function(msg) {
+            socket.on('broadcast', function (msg) {
                 $('#messages').append($('<li>').text(msg));
             });
-        </script>
-        
-    </body>
+        });
+    </script>
+
+</body>
 </html>
