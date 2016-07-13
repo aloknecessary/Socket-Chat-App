@@ -33,10 +33,12 @@
     padding: 20px;
     min-height: 300px;
     height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    -ms-border-radius: 8px;
+    border-radius: 8px;
 }
 
-    #messages li {
+#messages li {
         padding: 5px 10px;
         margin: 8px;
     }
@@ -67,7 +69,7 @@ li.my-msg {
     box-shadow: 2px 2px 2px rgb(208, 246, 57);
 }
 
-#username {
+.chat {
     -ms-border-radius: 5px;
     border-radius: 5px;
     -webkit-box-shadow: 5px 0px 21px #24efe6;
@@ -95,6 +97,140 @@ li.my-msg {
 #title {
     font-weight: bold;
     font: 16px Harrington, Arial;
+    -ms-text-shadow: 0 0 5px #FF0000;
     text-shadow: 0 0 5px #FF0000;
-    color: white;
+    color: #5baaee;
+}
+
+.open-chat {
+    background: cornsilk;
+    -webkit-box-shadow: 1px 2px 5px red;
+    -ms-box-shadow: 1px 2px 5px red;
+    box-shadow: 1px 2px 5px red;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.room-chat {
+    background: cornsilk;
+    -webkit-box-shadow: 1px 2px 5px #7fde17;
+    -ms-box-shadow: 1px 2px 5px #7fde17;
+    box-shadow: 1px 2px 5px #7fde17;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.personal-chat {
+    background: cornsilk;
+    -webkit-box-shadow: 1px 2px 5px #17b9de;
+    -ms-box-shadow: 1px 2px 5px #17b9de;
+    box-shadow: 1px 2px 5px #17b9de;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.no-left-padding {
+    padding-left: 0 !important;
+}
+
+.no-left-right-padding {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+
+.user-register-open {
+    background: azure;
+    padding: 10px;
+    -webkit-box-shadow: 3px 3px 1px red;
+    -ms-box-shadow: 3px 3px 1px red;
+    box-shadow: 3px 3px 1px red;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+}
+
+
+.user-register-room {
+    background: azure;
+    padding: 10px;
+    -webkit-box-shadow: 3px 3px 1px #7fde17;
+    -ms-box-shadow: 3px 3px 1px #7fde17;
+    box-shadow: 3px 3px 1px #7fde17;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+}
+
+
+.user-register-personal {
+    background: azure;
+    padding: 10px;
+    -webkit-box-shadow: 3px 3px 1px #17b9de;
+    -ms-box-shadow: 3px 3px 1px #17b9de;
+    box-shadow: 3px 3px 1px #17b9de;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.active-rooms {
+    background: lightslategrey;
+    color: whitesmoke;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: inset 0 0 10px #08774e;
+    -ms-box-shadow: inset 0 0 10px #08774e;
+    box-shadow: inset 0 0 10px #08774e;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+   
+}
+
+.margin-bottom-15 {
+ margin-bottom: 15px   
+}
+
+.server-notification {
+    color: whitesmoke;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 70px 5px 20px yellowgreen;
+    -ms-box-shadow: inset 70px 10px 25px yellowgreen;
+    box-shadow: inset 70px 5px 20px yellowgreen;
+    background: #328a32;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+#conversation {
+    -ms-border-radius: 15px;
+    border-radius: 15px;
+    border-top: 2px solid #73AD21;
+    border-left: 2px solid #73AD21;
+    border-right: 2px solid #5bc0de;
+    border-bottom: 2px solid #5bc0de;
+    padding: 20px; 
+    min-height: 150px;
+    background: floralwhite;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.send-chat-panel {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: inset 0 0 10px #5bc0de;
+    -ms-box-shadow: inset 0 0 10px #5bc0de;
+    box-shadow: inset 0 0 10px #5bc0de;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    background: aliceblue;
+}
+
+b {
+        color: brown;
 }

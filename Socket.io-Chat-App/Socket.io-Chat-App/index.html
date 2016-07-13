@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html>
 <head>
-    <title>Socket.IO sample chat</title>
+    <title>Sample Chat App using Socket.IO & Node.js</title>
     <script src="scripts/socket.io-1.4.5.js"></script>
     <script src="scripts/jquery-2.2.3.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css" />
@@ -9,15 +9,72 @@
 </head>
 <body>
     <div class="row start-chat">
-        <div class="col-xs-4 col-xs-offset-4 user-register">
-            <div class="row">
-                <h3>Set your username and start chatting:</h3>
+        <div class="col-xs-12">
+            <h2>Lets chat! <span><small>Choose your chat and go ahead </small></span></h2>
+        </div>
+        <div class="col-xs-12">
+            <br />
+            <div class="col-xs-4 no-left-padding">
+                <div class="col-xs-12 open-chat">
+                    <h4>Open chat</h4>
+                </div>
             </div>
-            <div class="row">
-                <input class="form-control" type="text" placeholder="type in your username" id="username" />
+            <div class="col-xs-4 no-left-padding">
+                <div class="col-xs-12 room-chat">
+                    <h4>Room chat</h4>
+                </div>
             </div>
-            <div class="row pull-right">
-                <button class="btn btn-info" id="userRegister">Register</button>
+            <div class="col-xs-4 no-left-right-padding">
+                <div class="col-xs-12 personal-chat">
+                    <h4>Personal chat<small> Coming soon..</small></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <br />
+            <br />
+            <div class="col-xs-4 no-left-padding">
+                <div class="col-xs-12 user-register-open">
+                    <div class="row">
+                        <h4>Set your username and start chatting:</h4>
+                    </div>
+                    <div class="row">
+                        <input class="form-control chat" type="text" placeholder="type in your username" id="username" />
+                    </div>
+                    <div class="row pull-right">
+                        <button class="btn btn-warning" id="userRegister">Register</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 no-left-padding">
+                <div class="col-xs-12 user-register-room">
+                    <div class="row">
+                        <h4>Type your username and join a room:</h4>
+                    </div>
+                    <div class="row">
+                        <input class="form-control chat" type="text" placeholder="type in your username" id="room_username" />
+                    </div>
+                    <div class="row text-center">
+                        <button class="btn btn-success join-room" id="room1">Room 1</button>
+                        <button class="btn btn-success join-room" id="room2">Room 2</button>
+                        <button class="btn btn-success join-room" id="room3">Room 3</button>
+                        <button class="btn btn-success join-room" id="room4">Room 4</button>
+                        <button class="btn btn-success join-room" id="room5">Room 5</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 no-left-right-padding">
+                <div class="col-xs-12 user-register-personal">
+                    <div class="row">
+                        <h4>Set your username and start chatting:</h4>
+                    </div>
+                    <div class="row">
+                        <input class="form-control chat" type="text" placeholder="type in your username" id="personal_username" />
+                    </div>
+                    <div class="row pull-right">
+                        <button class="btn btn-info">Start</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -48,62 +105,43 @@
             </form>
         </div>
     </div>
+    <div class="row hidden room-chatting">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 active-rooms">
+                    <div class="col-xs-12">
+                        <h3>We are currently having these open rooms to chat</h3>
+                    </div>
+                    <div class="col-xs-12 margin-bottom-15" id="rooms">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 text-muted server-notification">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 text-muted" id="conversation">
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="row send-chat-panel">
+                <div class="col-xs-10 col-sm-11">
+                    <input id="roomChatMessage" class="form-control" placeholder="type your text and press enter to send"/>
+                </div>
+                <div class="col-xs-2 col-sm-1">
+                    <button class="btn btn-info pull-right" id="sendRoomChat">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--User's  Scripts -->
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var socket = io();
-            $('#username').focus();
-            //
-            $('#userRegister').off('click').on('click', function () {
-                socket.emit('adduser', $('#username').val());
-            });
-            //
-            // listener, whenever the server emits 'updatechat', this updates the chat body
-            socket.on('updatechat', function (data) {
-                $('#title').append(data);
-                console.log(data);
-                $('.chatting').removeClass('hidden');
-                $('.start-chat').addClass('hidden');
-            });
-            //
-            $('form').submit(function () {
-                if ($('#username').val() === '') {
-                    alert('Username is required to chat..');
-                    $('#username').focus();
-                    return false;
-                }
-                var req = {
-                    username: $('#username').val(),
-                    msg: $('#msg').val()
-                };
-                socket.emit('chat message', req);
-                $('#msg').val('');
-                //
-                //Needed if you user broadcast at server end to append self messages
-                //$('#messages').append($('<li class="keep-left">').html('<b>' + req.username + ': </b>' + req.msg));
-                return false;
-            });
-            //
-            $('#msg').on('keypress', function () {
-                if ($(this).val().length % 3 == 0) {
-                    socket.emit('typing', $('#username').val());
-                }
-            });
-            //
-            socket.on('chat message', function (msg) {
-                $('#messages').append($('<li class="' + (msg.username === $('#username').val() ? 'my-msg' : 'fnds-msg') + '">').html('<b>' + msg.username + ': </b>' + msg.msg + '<span></span>'));
-            });
-            //
-            socket.on('typing', function (msg) {
-                $('#userTyping').html(msg + " is typing...").fadeIn().fadeOut();
-            });
-            //
-            socket.on('broadcast', function (msg) {
-                $('#messages').append($('<li>').text(msg));
-            });
-        });
-    </script>
-
+    <script src="scripts/main.js"></script>
 </body>
 </html>
