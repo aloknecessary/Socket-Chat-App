@@ -80,7 +80,7 @@ io.on('connection', function (socket) {
     socket.on('switchRoom', function (newroom) {
         socket.leave(socket.room);
         socket.join(newroom);
-        socket.emit('updateroomchat', 'SERVER', 'you are now connected to ' + newroom);
+        socket.emit('updateroomchat', 'SERVER', 'You are now connected to ' + newroom);
         // sent message to OLD room
         socket.broadcast.to(socket.room).emit('updateroomchat', 'SERVER', socket.username + ' has left this room');
         // update socket session room title

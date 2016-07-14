@@ -30,6 +30,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="scripts\bootstrap.min.3.3.6.js" />
     <Compile Include="scripts\jquery-2.2.3.js" />
     <Compile Include="scripts\main.js" />
     <Compile Include="server.js" />
