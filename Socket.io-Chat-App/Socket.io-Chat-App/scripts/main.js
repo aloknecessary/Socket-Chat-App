@@ -110,7 +110,7 @@
     // When the client clicks Room Chat send button
     //
     $('#sendRoomChat').off('click').on('click', function() {
-        var message = $('#data').val();
+        var message = $('#roomChatMessage').val();
         $('#roomChatMessage').val('');
         // tell server to execute 'room chat' and send along one parameter
         socket.emit('room chat', message);
