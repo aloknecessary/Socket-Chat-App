@@ -35,15 +35,16 @@
     //
     // listener, whenever the server emits 'updaterooms', this updates the room the client is in
     socket.on('updaterooms', function (rooms, currentRoom) {
-        $('#rooms').empty();
+        $('#chat_rooms').empty();
         $.each(rooms, function (key, value) {
             if (value == currentRoom) {
-                $('#rooms').append('<div class="col-sm-1 col-xs-2" title="Hey! this is your active room"><a class="btn btn-xs btn-success switch-rooms disabled" data-room="' + value + '">' + value + '</a></div>');
+                $('#chat_rooms').append('<div class="col-sm-1 col-xs-2" title="Hey! this is your active room"><a class="btn btn-xs btn-success switch-rooms disabled" data-room="' + value + '">' + value + '</a></div>');
             }
             else {
-                $('#rooms').append('<div  class="col-sm-1 col-xs-2" title="Wanna Join me ??"><a class="btn btn-xs btn-info switch-rooms" data-room="' + value + '">' + value + '</a></div>');
+                $('#chat_rooms').append('<div  class="col-sm-1 col-xs-2" title="Wanna Join me ??"><a class="btn btn-xs btn-info switch-rooms" data-room="' + value + '">' + value + '</a></div>');
             }
         });
+        bindRoomClickEvent();
     });
     //
     socket.on('chat message', function (msg) {
@@ -90,6 +91,12 @@
     //
     // jQuery Codes
     //
+    function bindRoomClickEvent() {
+        $('#chat_rooms .switch-rooms').off('click').on('click', function () {
+            socket.emit('switchRoom', $(this).data('room'));
+        });
+    };
+    //
     function addPersonalChatMessageToDiv(user, msg) {
         $('#personalConversation').append('<label><b>' + user + ':</b> ' + msg + '</label><br>');
         if ($('#personalConversation>label').length > 14) {
@@ -110,10 +117,6 @@
         };
         // call the server-side function 'joinroom' and send one object
         socket.emit('joinroom', req);
-    });
-    //
-    $(document).off('click').on('click', '.switch-rooms', function () {
-        socket.emit('switchRoom', $(this).data('room'));
     });
     //
     $('#userRegister').off('click').on('click', function () {
