@@ -1,4 +1,5 @@
-﻿$(document).ready(function() {
+﻿$(document).ready(function () {
+    var currUser = {};
     var socket = io();
     //
     // listener, whenever the server emits 'updatechat', this updates the chat body
@@ -10,7 +11,7 @@
     });
     // listener, whenever the server emits 'updatechat', this updates the chat body
     socket.on('updateroomchat', function(username, data) {
-        console.log(data);
+        //console.log(data);
         $('.room-chatting').removeClass('hidden');
         $('.chatting, .start-chat').addClass('hidden');
         if (username === 'SERVER') {
@@ -61,6 +62,42 @@
     socket.on('broadcast', function (msg) {
         $('#messages').append($('<li>').text(msg));
     });
+    //
+    socket.on('update client list', function(users) {
+        console.log(users);
+        var activeUId = '';
+        if ($('#online_users li.active').length == 1) {
+            activeUId = $('#online_users li.active').attr('id');
+        }
+        $('#currUser').val(currUser.name);
+        $('#online_users').empty();
+        $.each(users, function (i, user) {
+            if (user.uniqueId != currUser.uniqueId) {
+                $('#online_users').append('<li id="' + user.uniqueId + '"><label>' + user.name + ' <span class="circle"></span></label></li>');    
+            }
+        });
+        $('#online_users li[id="' + activeUId + '"]').addClass('active');
+    });
+    //
+    socket.on('personal chat', function (response) {
+        if ($('.start-personal-chat').hasClass('hidden')) {
+            $('.start-personal-chat').removeClass('hidden');
+            $('#online_users>li[id="' + response.fromUId + '"]').addClass('active');
+            $('.start-personal-chat .server-notification').html('<label>' + response.fromUser + ' started chat with you</label>');
+        }
+        addPersonalChatMessageToDiv(response.fromUser, response.message);
+    });
+    //
+    // jQuery Codes
+    //
+    function addPersonalChatMessageToDiv(user, msg) {
+        $('#personalConversation').append('<label><b>' + user + ':</b> ' + msg + '</label><br>');
+        if ($('#personalConversation>label').length > 14) {
+            $('#personalConversation').animate({
+                scrollTop: 100 + ($('#personalConversation>label').length * 10)
+            });
+        }
+    };
     //
     $('.join-room').off('click').on('click', function () {
         if ($('#room_username').val() === '') {
@@ -119,6 +156,44 @@
     $('#roomChatMessage').on('keypress',function (e) {
         if (e.which == 13) {
             $('#sendRoomChat').trigger('click');
+        }
+    });
+    //
+    $('#personal_chat_start').off('click').on('click', function () {
+        if ($('#personal_username').val() === '') {
+            alert('Username is required to chat ');
+            return false;
+        }
+        $('.personal-chat-room').removeClass('hidden');
+        $('.start-chat').addClass('hidden');
+        currUser = {
+            name: $('#personal_username').val(),
+            uniqueId: $('#personal_username').val() + new Date().getTime()
+        };
+        $('#welcome_chat_user').html('Welcome ' + currUser.name);
+        // call the server-side function 'join personal chat' and send one object
+        socket.emit('join personal chat', currUser);
+        
+    });
+    //
+    $(document).off('click').on('click', '#online_users li',function() {
+        $('#online_users li').removeClass('active');
+        $(this).addClass('active');
+        $('.start-personal-chat').removeClass('hidden');
+        $('.start-personal-chat .server-notification').html('<label>You started chat with ' + $(this).text() + '</label>');
+    });
+    //
+    $('#sendPersonalChat').off('click').on('click', function () {
+        var message = $('#personalChatMessage').val();
+        $('#personalChatMessage').val('');
+        addPersonalChatMessageToDiv("You", message);
+        // tell server to execute 'room chat' and send along one parameter
+        socket.emit('start personal chat',$('#online_users li.active').attr('id') ,message);
+    });
+    // when the client hits ENTER on their keyboard
+    $('#personalChatMessage').on('keypress', function (e) {
+        if (e.which == 13) {
+            $('#sendPersonalChat').trigger('click');
         }
     });
 });

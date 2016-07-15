@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
 var usernames = {};
+var clientList = [];
 // rooms which are currently available in chat
 var rooms = ['room1', 'room2', 'room3', 'room4', 'room5'];
 //
@@ -22,6 +23,8 @@ io.on('connection', function (socket) {
     //socket.on('chat message', function (msg) {
     //    socket.broadcast.emit('chat message', msg);
     //});
+    // -------------- OPEN CHAT CODE ---------
+    //
     // when the client emits 'adduser', this listens and executes
     socket.on('adduser', function (username) {
         // store the username in the socket session for this client
@@ -53,7 +56,16 @@ io.on('connection', function (socket) {
     //
     socket.on('disconnect', function () {
         console.log('user disconnected on socket id : ' + socket.id);
+        if (socket.uniqueId) {
+            // remove the username from global usernames list
+            clientList.splice(clientList.indexOf(socket.uniqueId));
+            // update list of users in chat, client-side
+            io.sockets.emit('update client list', clientList);
+            socket.leave(socket.uniqueId);
+        }
     });
+    //
+    // ------------ ROOM CHAT CODE ----------------------
     //
     // when the client emits 'joinroom', this listens and executes
     socket.on('joinroom', function (user) {
@@ -66,7 +78,7 @@ io.on('connection', function (socket) {
         // send client to room 1
         socket.join(user.room);
         // echo to client they've connected
-        socket.emit('updateroomchat', 'SERVER', 'you are now connected to ' + user.room);
+        socket.emit('updateroomchat', 'SERVER', 'You are now connected to ' + user.room);
         // echo to room that a person has connected to their room
         socket.broadcast.to(user.room).emit('updateroomchat', 'SERVER', user.name + ' has connected to this room');
         socket.emit('updaterooms', rooms, user.room);
@@ -88,7 +100,27 @@ io.on('connection', function (socket) {
         socket.broadcast.to(newroom).emit('updateroomchat', 'SERVER', socket.username + ' has joined this room');
         socket.emit('updaterooms', rooms, newroom);
     });
-	
+	//
+    // ----------- PERSONAL USER CHAT -------------------
+    //
+    socket.on('join personal chat', function(user) {
+        socket.join(user.uniqueId); // We are using room of socket io
+        socket.uniqueId = user.uniqueId;
+        socket.user = user.name;
+        // echo to client they've connected
+        clientList.push(user);
+        io.sockets.emit('update client list', clientList);
+    });
+    //
+    socket.on('start personal chat', function(toUser,msg) {
+        //console.log('To ' + to + " msg " + msg);
+        var response = {
+            fromUser: socket.user,
+            fromUId: socket.uniqueId,
+            message: msg
+        };
+        socket.broadcast.to(toUser).emit('personal chat', response);
+    });
 });
 
 http.listen(3000, function () {

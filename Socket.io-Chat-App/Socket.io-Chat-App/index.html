@@ -27,7 +27,7 @@
             </div>
             <div class="col-xs-4 no-left-right-padding">
                 <div class="col-xs-12 personal-chat">
-                    <h4>Personal chat<small> Coming soon..</small></h4>
+                    <h4>Personal chat</h4>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
                         <input class="form-control chat" type="text" placeholder="type in your username" id="personal_username" />
                     </div>
                     <div class="row pull-right">
-                        <button class="btn btn-info">Start</button>
+                        <button class="btn btn-info" id="personal_chat_start">Start</button>
                     </div>
                 </div>
             </div>
@@ -140,6 +140,45 @@
                     <button class="btn btn-info pull-right" id="sendRoomChat">Send</button>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row hidden personal-chat-room">
+        <div class="col-xs-12">
+            <div class="col-xs-10">
+                <div class="col-xs-12 Welcome-personal-chat-user">
+                    <h4 id="welcome_chat_user"></h4>
+                </div>
+                <div class="hidden start-personal-chat">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-12 text-muted server-notification">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-12 text-muted" id="personalConversation">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="row personal-send-chat-panel">
+                            <div class="col-xs-10 col-sm-11">
+                                <input id="personalChatMessage" class="form-control" placeholder="type your text and press enter to send"/>
+                            </div>
+                            <div class="col-xs-2 col-sm-1">
+                                <button class="btn btn-success pull-right" id="sendPersonalChat">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2 online-users-list">
+                <h4 class="online-users-title">Online users</h4>
+                <ul id="online_users">
+                </ul>
+            </div>    
         </div>
     </div>
     <!--User's  Scripts -->
